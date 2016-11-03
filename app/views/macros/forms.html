@@ -103,6 +103,49 @@
   </fieldset>
 {% endmacro %}
 
+{% macro radioColumns(name, label, options, error) %}
+
+  {% set totalOptions = options.length %}
+  {% set isEven =  ( totalOptions === 0 or (totalOptions and not (totalOptions%2)) ) %}
+  {% if isEven %}
+  {% set newColumn = ( totalOptions / 2 ) %}
+  {% else %}
+  {% set newColumn = Math.ceil( totalOptions / 2 ) %}
+  {% endif %}
+
+  <fieldset class="form-group form-group__checkbox-group" id="{{ name }}-wrapper">
+
+    <legend class="form-label">{{ label }}</legend>
+
+    <div class="options-col-1">
+
+    {% for option in options %}
+
+      {% if loop.index0 === newColumn %}
+
+    </div>
+    <div class="options-col-2">
+
+      {% endif %}
+
+      {% set id=name + '-' + option.value + '-id' %}
+
+      <label class="block-label" for="{{ id }}">
+        <input id="{{ id }}"
+               type="radio"
+               name="{{ name }}"
+               value="{{ option.value }}"
+               {% if checked %}checked{% endif %}>
+        {{ option.title }}
+      </label>
+
+    {% endfor %}
+
+    </div>
+
+  </fieldset>
+{% endmacro %}
+
 {% macro yesNo(name, label, radioValue='no', error) %}
   <fieldset class="inline form-group form-group__checkbox-group" id="{{ name }}-wrapper">
 

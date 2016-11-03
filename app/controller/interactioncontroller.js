@@ -6,6 +6,8 @@ const router = express.Router();
 const interactionRepository = require('../repository/interactionrepository');
 const contactRepository = require('../repository/contactrepository');
 const companyRepository = require('../repository/companyrepository');
+const createClassName = require('../lib/createClassName');
+let metadata = require('../lib/metadata');
 
 const controllerUtils = require('../lib/controllerutils');
 
@@ -16,7 +18,7 @@ function view(req, res) {
     res.redirect('/');
   }
 
-  interactionRepository.getInteraction(interaction_id)
+  interactionRepository.getInteraction(req.session.token, interaction_id)
     .then((interaction) => {
       res.render('interaction/interaction-details', {
         interaction
@@ -32,7 +34,7 @@ function view(req, res) {
 function edit(req, res) {
   let interactionId = req.params.interaction_id || null;
 
-  interactionRepository.getInteraction(interactionId)
+  interactionRepository.getInteraction(req.session.token, interactionId)
     .then((interaction) => {
       res.render('interaction/interaction-edit', {
         company: null,
@@ -88,7 +90,25 @@ function post(req, res) {
     });
 }
 
+function chooseType( req, res ){
 
+  metadata.getInteractionTypes().then( (types) => {
+
+    types = types.map( ( type ) => {
+      return {
+        value: type.id,
+        title: type.name
+      };
+    } );
+
+    res.render( 'interaction/choose-type', {
+      action: '/interaction/add',
+      types
+    } );
+  } );
+}
+
+router.get('/type', chooseType);
 router.get('/add?', add);
 router.get('/:interaction_id/edit', edit);
 router.get('/:interaction_id/view', view);

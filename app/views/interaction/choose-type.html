@@ -1,0 +1,16 @@
+{% extends "../layouts/ukti-search-header.html" %}
+{% import "macros/forms.html" as forms %}
+
+{% block main %}
+
+  <h1 class="heading-xlarge">Add new interaction</h1>
+
+  <form action="{{ action }}" method="get">
+
+    {{ forms.radioColumns('type', label="Please select the interaction type", options=types) }}
+
+    {{ forms.save(buttonText='Continue') }}
+
+  </form>
+
+{% endblock %}

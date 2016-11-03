@@ -33,6 +33,14 @@ const metadataItems = [
 ];
 
 
+module.exports.getInteractionTypes = function(){
+
+  return request({
+   url: `${config.apiRoot}/metadata/interaction-type/`,
+   json: true
+  });
+};
+
 module.exports.fetchAll = function( cb ){
 
   let caughtErrors;
