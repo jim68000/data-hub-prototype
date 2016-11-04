@@ -198,8 +198,13 @@ function teamLookup(req, res) {
     results = results.splice(0, 10);
   }
   res.json(results);
+}
 
+function getServiceDeliveryStatuses( req, res ){
 
+  metadata.getServiceDeliveryStatuses().then( ( statuses ) => {
+    res.json( statuses );
+  } );
 }
 
 router.get('/suggest', companySuggest);
@@ -210,6 +215,7 @@ router.get('/contactlookup', contactLookup);
 router.get('/teamlookup', teamLookup);
 router.get('/meta/:metaName', getMetadata);
 router.get('/postcodelookup/:postcode', postcodelookup);
+router.get('/servicedeliverystatuses', getServiceDeliveryStatuses);
 
 
 module.exports = {

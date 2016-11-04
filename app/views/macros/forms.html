@@ -103,14 +103,14 @@
   </fieldset>
 {% endmacro %}
 
-{% macro radioColumns(name, label, options, error) %}
+{% macro radioColumns(name, label, options, error, value) %}
 
   {% set totalOptions = options.length %}
   {% set isEven =  ( totalOptions === 0 or (totalOptions and not (totalOptions%2)) ) %}
   {% if isEven %}
   {% set newColumn = ( totalOptions / 2 ) %}
   {% else %}
-  {% set newColumn = Math.ceil( totalOptions / 2 ) %}
+  {% set newColumn = ( totalOptions / 2 ) | ceil %}
   {% endif %}
 
   <fieldset class="form-group form-group__checkbox-group" id="{{ name }}-wrapper">
@@ -135,7 +135,7 @@
                type="radio"
                name="{{ name }}"
                value="{{ option.value }}"
-               {% if checked %}checked{% endif %}>
+               {% if (option.value == value) %}checked{% endif %}>
         {{ option.title }}
       </label>
 

@@ -194,4 +194,13 @@ filter.date = function( date, format ) {
   return formatted;
 };
 
+/**
+ * returns the results of Math.ceil
+ * @param  {Number} num
+ * @return {Number}
+ */
+filter.ceil = function(num) {
+  return Math.ceil( num );
+};
+
 module.exports = filter;

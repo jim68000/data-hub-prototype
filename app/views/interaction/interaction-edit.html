@@ -2,6 +2,8 @@
 
 {% block main %}
   <div id="interaction-form"
+       data-change-type={{ changeTypeUrl | dump | safe }}
+       data-type='{{ type | dump | safe }}'
        data-contact='{{ contact | dump | safe }}'
        data-company='{{ company | dump | safe }}'
        data-interaction='{{ interaction | dump | safe }}'>Loading...</div>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import {BaseForm} from './baseform';
 import {AutosuggestComponent as Autosuggest} from '../components/autosuggest.component';
 import {RadioWithIdComponent as RadioWithId} from '../components/radiowithid.component';
+import {InlineRadioComponent as InlineRadio} from '../components/inlineradio.component';
 import {DateInputComponent as DateInput} from '../components/dateinput.component';
 
 import {inputTextComponent as InputText} from '../components/inputtext.component';
@@ -18,7 +19,11 @@ const LABELS = {
   'notes': 'Interaction notes',
   'data_of_interaction': 'Date of interaction',
   'service': 'Service offer (optional)',
-  'dit_team': 'Service provider (optional)'
+  'dit_team': 'Service provider (optional)',
+  service_delivery_type: 'Service delivery type',
+  service_delivery_status: 'Status',
+  service_delivery_date: 'Service delivery start date',
+  service_delivery_dit_team: 'DIT Team'
 };
 
 const defaultInteraction = {
@@ -38,6 +43,8 @@ const defaultInteraction = {
     id: '',
     name: ''
   },
+  service_delivery_type: '',
+  service_delivery_status: '',
   subject: '',
   notes: '',
   date_of_interaction: '',
@@ -61,6 +68,20 @@ export class InteractionForm extends BaseForm {
       showCompanyField: true,
       showContactField: true
     };
+
+    this.changeTypeUrl = props.changeType;
+    this.serviceDeliveryTypes = [
+      { value: 0, title: 'Significant assistance' },
+      { value: 1, title: 'Event assistance' }
+    ];
+
+    if( props.type ){
+
+      defaultInteraction.interaction_type = props.type;
+
+      // TODO: need to figure out how to do this with real data
+      state.isServiceDelivery = ( props.type.name.toLowerCase() === 'service delivery' );
+    }
 
     if (props.interaction) {
       state.formData = props.interaction;
@@ -130,6 +151,7 @@ export class InteractionForm extends BaseForm {
     const formData = this.state.formData;
 
     let backUrl = this.getBackUrl();
+    let changeTypeUrl = this.changeTypeUrl;
 
     return (
       <div>
@@ -153,14 +175,25 @@ export class InteractionForm extends BaseForm {
           </div>
         }
 
-        <RadioWithId
-          value={formData.interaction_type.id || null}
-          url="/api/meta/typesofinteraction"
-          name="interaction_type"
-          label={LABELS.interaction_type}
-          errors={this.getErrors('interaction_type')}
-          onChange={this.updateField}
-        />
+        <div className="form-group">
+          <div className="form-label">{ LABELS.interaction_type }</div>
+          <strong>{ formData.interaction_type.name }</strong> <a className="change-type" href={ changeTypeUrl }>change</a>
+        </div>
+
+        { this.state.isServiceDelivery && <InlineRadio
+          options={ this.serviceDeliveryTypes }
+          name="service_delivery_type"
+          onChange={ this.updateField }
+          errors={ this.getErrors( 'service_delivery_type' ) }
+          value={ formData.service_delivery_type }
+          label={ LABELS.service_delivery_type }/>}
+
+        { this.state.isServiceDelivery && <RadioWithId
+          url='/api/servicedeliverystatuses'
+          label={ LABELS.service_delivery_status }
+          name='service_delivery_status'
+          onChange={ this.updateField }
+          />}
 
         <InputText
           label={LABELS.subject}
@@ -198,7 +231,7 @@ export class InteractionForm extends BaseForm {
         }
 
         <DateInput
-          label="Date of interaction"
+          label={ this.state.isServiceDelivery ? LABELS.service_delivery_date : "Date of interaction" }
           name="date_of_interaction"
           value={formData.date_of_interaction}
           onChange={this.updateField}
@@ -214,23 +247,32 @@ export class InteractionForm extends BaseForm {
           value={formData.dit_advisor}
         />
 
-        <Autosuggest
+        { this.state.isServiceDelivery && <Autosuggest
+          label={LABELS.service_delivery_dit_team}
+          lookupUrl='/api/teamlookup'
+          onChange={this.updateField}
+          errors={this.getErrors('dit_team')}
+          name="dit_team"
+          value={formData.dit_team}
+          /> }
+
+        { !this.state.isServiceDelivery && <Autosuggest
           label={LABELS.service}
           suggestionUrl='/api/meta/service'
           onChange={this.updateField}
           errors={this.getErrors('service')}
           name="service"
           value={formData.service}
-        />
+        /> }
 
-        <Autosuggest
+        { !this.state.isServiceDelivery && <Autosuggest
           label={LABELS.dit_team}
           lookupUrl='/api/teamlookup'
           onChange={this.updateField}
           errors={this.getErrors('dit_team')}
           name="dit_team"
           value={formData.dit_team}
-        />
+        /> }
 
         <div className="button-bar">
           <button className="button button--save" type="button" onClick={this.save}>Save</button>

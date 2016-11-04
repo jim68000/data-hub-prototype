@@ -7,7 +7,15 @@
 
   <form action="{{ action }}" method="get">
 
-    {{ forms.radioColumns('type', label="Please select the interaction type", options=types) }}
+    {% if contact_id %}
+      <input type="hidden" name="contact_id" value="{{ contact_id }}">
+    {% endif %}
+
+    {% if company_id %}
+      <input type="hidden" name="company_id" value="{{ company_id }}">
+    {% endif %}
+
+    {{ forms.radioColumns('type', label="Please select the interaction type", options=types, value=type_id) }}
 
     {{ forms.save(buttonText='Continue') }}
 

@@ -32,13 +32,63 @@ const metadataItems = [
   [ 'team', 'TEAMS' ]
 ];
 
+function getInteractionTypes(){
 
-module.exports.getInteractionTypes = function(){
+  return new Promise( ( resolve, reject ) => {
 
-  return request({
-   url: `${config.apiRoot}/metadata/interaction-type/`,
-   json: true
-  });
+    request({
+      url: `${config.apiRoot}/metadata/interaction-type/`,
+      json: true
+    }).then( ( types ) => {
+
+      //add my new fake type for now
+      types.push( {
+        id: 'service-del-test',
+        name: 'Service delivery'
+      } );
+
+      resolve( types );
+
+    } ).catch( reject );
+  } );
+}
+
+
+module.exports.getInteractionTypes = getInteractionTypes;
+
+module.exports.getInteractionType = function( id ){
+
+  return new Promise( ( resolve, reject ) => {
+
+    getInteractionTypes().then( ( types ) => {
+
+      let type;
+
+      for( type of types ){
+        if( type.id === id ){
+          return resolve( type );
+        }
+      }
+
+      reject();
+
+    } ).catch( reject );
+  } );
+};
+
+module.exports.getServiceDeliveryStatuses = function(){
+
+  return new Promise( ( resolve/* , reject */ ) => {
+
+    resolve([
+      { id: 0, name: 'Completed' },
+      { id: 1, name: 'Current' },
+      { id: 2, name: 'Offered' },
+      { id: 3, name: 'On hold' },
+      { id: 4, name: 'UKEF - In discussion - Application likely' },
+      { id: 5, name: 'Withdrawn' }
+    ]);
+  } );
 };
 
 module.exports.fetchAll = function( cb ){
