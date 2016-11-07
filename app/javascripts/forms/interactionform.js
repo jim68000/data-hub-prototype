@@ -23,7 +23,9 @@ const LABELS = {
   service_delivery_type: 'Service delivery type',
   service_delivery_status: 'Status',
   service_delivery_date: 'Service delivery start date',
-  service_delivery_dit_team: 'DIT Team'
+  service_delivery_dit_team: 'DIT Team',
+  service_delivery_uk_region: 'UK region',
+  service_delivery_primary_sector: 'Primary sector'
 };
 
 const defaultInteraction = {
@@ -45,6 +47,10 @@ const defaultInteraction = {
   },
   service_delivery_type: '',
   service_delivery_status: '',
+  uk_region: {
+    id: '',
+    name: ''
+  },
   subject: '',
   notes: '',
   date_of_interaction: '',
@@ -254,6 +260,24 @@ export class InteractionForm extends BaseForm {
           errors={this.getErrors('dit_team')}
           name="dit_team"
           value={formData.dit_team}
+          /> }
+
+        { this.state.isServiceDelivery && <Autosuggest
+          label={ LABELS.service_delivery_uk_region }
+          lookupUrl='/api/meta/region'
+          onChange={ this.updateField }
+          errors={ this.getErrors( 'uk_region' ) }
+          name='uk_region'
+          value={ formData.uk_region }
+          /> }
+
+        { this.state.isServiceDelivery && <Autosuggest
+          label={ LABELS.service_delivery_primary_sector }
+          lookupUrl='/api/meta/sector'
+          onChange={ this.updateField }
+          errors={ this.getErrors( 'primary_sector' ) }
+          name='primary_sector'
+          value={ formData.primary_sector }
           /> }
 
         { !this.state.isServiceDelivery && <Autosuggest
