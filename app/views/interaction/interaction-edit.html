@@ -1,11 +1,17 @@
 {% extends "../layouts/ukti-search-header.html" %}
 
 {% block main %}
-  <div id="interaction-form"
-       data-change-type={{ changeTypeUrl | dump | safe }}
-       data-type='{{ type | dump | safe }}'
-       data-contact='{{ contact | dump | safe }}'
-       data-company='{{ company | dump | safe }}'
-       data-interaction='{{ interaction | dump | safe }}'>Loading...</div>
+  <div id="interaction-form">Loading...</div>
+  <script>
+  var dh = {
+    data: {
+      changeType: {{ changeTypeUrl | dump | safe }},
+      type: {{ type | dump | safe }},
+      contact: {{ contact | dump | safe }},
+      company: {{ company | dump | safe }},
+      interaction: {{ interaction | dump | safe }}
+    }
+  };
+  </script>
   <script src="/javascripts/interactionedit.bundle.js"></script>
 {% endblock %}

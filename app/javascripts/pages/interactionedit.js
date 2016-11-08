@@ -6,11 +6,13 @@ import ReactDOM from 'react-dom';
 import {InteractionForm} from '../forms/interactionform';
 
 const editElement = document.getElementById('interaction-form');
-const changeType = editElement.getAttribute('data-change-type').length > 0 ? editElement.getAttribute('data-change-type') : null;
-const type = editElement.getAttribute('data-type').length > 0 ? JSON.parse(editElement.getAttribute('data-type')) : null;
-const contact = editElement.getAttribute('data-contact').length > 0 ? JSON.parse(editElement.getAttribute('data-contact')) : null;
-const company = editElement.getAttribute('data-company').length > 0 ? JSON.parse(editElement.getAttribute('data-company')) : null;
-const interaction = editElement.getAttribute('data-interaction').length > 0 ? JSON.parse(editElement.getAttribute('data-interaction')) : null;
+
+const changeType = dh.data.changeType;
+const type = dh.data.type;
+const contact = dh.data.contact;
+const company = dh.data.company;
+const interaction = dh.data.interaction;
+
 let backUrl, backTitle, title;
 
 if (contact) {

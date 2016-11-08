@@ -7,7 +7,7 @@ module.exports = {
   port: port,
   apiRoot: process.env.API_ROOT || 'http://localhost:8000',
   api: {
-    authUrl: '/token/',
+    authUrl: '/token',
     clientId: process.env.API_CLIENT_ID,
     clientSecret: process.env.API_CLIENT_SECRET
   },

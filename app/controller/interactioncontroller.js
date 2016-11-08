@@ -38,7 +38,7 @@ function edit(req, res) {
       res.render('interaction/interaction-edit', {
         company: null,
         contact: null,
-        interaction
+        interaction: ( interaction || null )
       });
     });
 }
@@ -71,7 +71,7 @@ function add(req, res) {
     type: null,
     company: null,
     contact: null,
-    interactionId: null
+    interaction: null
   };
 
   function backToHome( e ){
