@@ -25,7 +25,9 @@ const LABELS = {
   service_delivery_date: 'Service delivery start date',
   service_delivery_dit_team: 'DIT Team',
   service_delivery_uk_region: 'UK region',
-  service_delivery_primary_sector: 'Primary sector'
+  service_delivery_primary_sector: 'Primary sector',
+  service_delivery_subsector: 'Subsector',
+  service_delivery_country: 'Country of interest'
 };
 
 const defaultInteraction = {
@@ -47,6 +49,18 @@ const defaultInteraction = {
   },
   service_delivery_type: '',
   service_delivery_status: '',
+  primary_sector: {
+    id: '',
+    name: ''
+  },
+  subsector: {
+    id: '',
+    name: ''
+  },
+  country_of_interest: {
+    id: '',
+    name: ''
+  },
   uk_region: {
     id: '',
     name: ''
@@ -126,6 +140,14 @@ export class InteractionForm extends BaseForm {
           saving: false
         });
       });
+  };
+
+  changePrimarySector = ( event ) => {
+
+    this.state.hasSubsectors = !!event.value.subsectors;
+    this.state.sectorId = event.value.id;
+
+    this.updateField( event );
   };
 
   lookupContacts = (term) => {
@@ -261,7 +283,7 @@ export class InteractionForm extends BaseForm {
 
         { this.state.isServiceDelivery && <Autosuggest
           label={ LABELS.service_delivery_uk_region }
-          lookupUrl='/api/meta/region'
+          lookupUrl='/api/ukregion'
           onChange={ this.updateField }
           errors={ this.getErrors( 'uk_region' ) }
           name='uk_region'
@@ -270,14 +292,30 @@ export class InteractionForm extends BaseForm {
 
         { this.state.isServiceDelivery && <Autosuggest
           label={ LABELS.service_delivery_primary_sector }
-          lookupUrl='/api/meta/primary_sectors'
-          onChange={ this.updateField }
+          lookupUrl='/api/primarysector'
+          onChange={ this.changePrimarySector }
           errors={ this.getErrors( 'primary_sector' ) }
           name='primary_sector'
           value={ formData.primary_sector }
           /> }
 
+        { this.state.hasSubsectors && <Autosuggest
+          label={ LABELS.service_delivery_subsector }
+          lookupUrl={'/api/subsectors/' + this.state.sectorId }
+          onChange={ this.updateField }
+          errors={ this.getErrors( 'subsector' ) }
+          name='subsector'
+          value={ formData.subsector }
+          /> }
 
+        { this.state.isServiceDelivery && <Autosuggest
+          label={ LABELS.service_delivery_country }
+          lookupUrl='/api/country'
+          onChange={ this.updateField }
+          errors={ this.getErrors( 'country_of_interest' ) }
+          name='country_of_interest'
+          value={ formData.country_of_interest }
+          /> }
 
         { !this.state.isServiceDelivery && <Autosuggest
           name="service"

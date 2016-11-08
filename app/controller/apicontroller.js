@@ -73,6 +73,7 @@ function accountManagerLookup(req, res) {
 }
 
 function getMetadata(req, res) {
+
   const metaName = req.params.metaName;
   let result;
 
@@ -151,7 +152,6 @@ function getMetadata(req, res) {
   }
 
   res.json(result);
-
 }
 
 function contactLookup(req, res) {
@@ -207,16 +207,53 @@ function teamLookup(req, res) {
 function getServiceDeliveryStatuses( req, res ){
 
   metadata.getServiceDeliveryStatuses().then( ( statuses ) => {
+
     res.json( statuses );
   } );
 }
 
+
 function getSubsectors( req, res ){
 
   const sectorId = req.params.sectorId;
+  let term = req.query.term;
+  const termLength = term && term.length;
+  let subsectors = metadata.SUBSECTORS[ sectorId ];
 
-  res.json( metadata.SUBSECTORS[ sectorId ] );
+  if( termLength ){
+
+    term = term.toLocaleLowerCase();
+
+    subsectors = subsectors.filter( ( subsector ) => {
+      return !!~subsector.name.toLocaleLowerCase().indexOf( term );
+    } );
+  }
+
+  res.json( subsectors );
 }
+
+function createIndexofFilter( metadataKey, propName ){
+
+  return function( req, res ){
+
+    let term = req.query.term;
+    const termLength = term && term.length;
+    let data = metadata[ metadataKey ];
+
+    if( termLength ){
+
+      term = term.toLocaleLowerCase();
+
+      data = data.filter( ( dataItem ) => {
+
+        return !!~dataItem[ propName ].toLocaleLowerCase().indexOf( term );
+      } );
+    }
+
+    res.json( data );
+  };
+}
+
 
 router.get('/suggest', companySuggest);
 router.get('/countrylookup', countryLookup);
@@ -226,7 +263,10 @@ router.get('/teamlookup', teamLookup);
 router.get('/meta/:metaName', getMetadata);
 router.get('/postcodelookup/:postcode', postcodelookup);
 router.get('/servicedeliverystatuses', getServiceDeliveryStatuses);
+router.get('/primarysector', createIndexofFilter( 'PRIMARY_SECTORS', 'name' ) );
 router.get('/subsectors/:sectorId', getSubsectors);
+router.get('/country', createIndexofFilter( 'COUNTRYS', 'name' ) );
+router.get('/ukregion', createIndexofFilter( 'REGION_OPTIONS', 'name' ) );
 
 
 module.exports = {
