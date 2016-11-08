@@ -8,6 +8,8 @@ const userLeads = require( '../lib/userLeads' );
 
 let contactRepository = require('../repository/contactrepository');
 let companyRepository = require('../repository/companyrepository');
+const itemCollectionService = require('../lib/itemcollectionservice');
+
 
 const REASONS_FOR_ARCHIVE = [
   'Contact has left the company',
@@ -30,7 +32,18 @@ function view(req, res) {
         contact.interactions = [];
       }
 
-      res.render('contact/contact', { term: req.query.term, contact, REASONS_FOR_ARCHIVE });
+      const timeSinceNewInteraction = itemCollectionService.getTimeSinceLastAddedItem(contact.interactions);
+      const interactionsInLastYear = itemCollectionService.getItemsAddedSince(contact.interactions);
+
+
+      res.render(
+        'contact/contact', {
+          term: req.query.term,
+          contact,
+          REASONS_FOR_ARCHIVE,
+          timeSinceNewInteraction,
+          interactionsInLastYear
+        });
     })
     .catch((error) => {
       res.render('error', {error});
@@ -148,7 +161,7 @@ function post(req, res) {
 }
 
 function archive(req, res) {
-  contactRepository.archiveContact(req.session.token, req.params.contact_id, req.body.archive_reason)
+  contactRepository.archiveContact(req.session.token, req.params.contact_id, req.body.archived_reason)
     .then(() => {
       res.redirect(`/contact/${req.params.contact_id}/view`);
     });

@@ -33,13 +33,6 @@ function companySuggest(req, res) {
     });
 }
 
-function companyDetail(req, res) {
-  companyRepository.getCompany(req.params.sourceId, req.params.source)
-    .then((data) => {
-      res.json(data);
-    });
-}
-
 function countryLookup(req, res) {
 
   if (!req.query.country || req.query.country.length === 0) {
@@ -111,6 +104,12 @@ function getMetadata(req, res) {
     case 'turnover_range':
       result = metadata.TURNOVER_OPTIONS;
       break;
+    case 'primary_sectors':
+      result = metadata.PRIMARY_SECTORS;
+      break;
+    case 'subsectors':
+      result = metadata.SUBSECTORS;
+      break;
     case 'role':
       rp({
         url: `${config.apiRoot}/metadata/role/`,
@@ -170,10 +169,15 @@ function contactLookup(req, res) {
 
   companyRepository.getDitCompany(req.session.token, companyParam)
     .then(company => {
-      const results = company.contacts.filter((contact) => {
-        const name = `${contact.first_name.toLocaleLowerCase()} ${contact.last_name.toLocaleLowerCase()}`;
-        return name.substr(0, contactParamLength) === contactParam;
-      });
+      const results = company.contacts
+        .map(({id, first_name, last_name}) => {
+          return {
+            id,
+            name: `${first_name} ${last_name}`
+          };
+        })
+        .filter(({name}) => name.substr(0, contactParamLength).toLocaleLowerCase() === contactParam);
+
       res.json(results);
     });
 }
@@ -207,8 +211,14 @@ function getServiceDeliveryStatuses( req, res ){
   } );
 }
 
+function getSubsectors( req, res ){
+
+  const sectorId = req.params.sectorId;
+
+  res.json( metadata.SUBSECTORS[ sectorId ] );
+}
+
 router.get('/suggest', companySuggest);
-router.get('/company/:source/:sourceId/?', companyDetail);
 router.get('/countrylookup', countryLookup);
 router.get('/accountmanagerlookup', accountManagerLookup);
 router.get('/contactlookup', contactLookup);
@@ -216,12 +226,12 @@ router.get('/teamlookup', teamLookup);
 router.get('/meta/:metaName', getMetadata);
 router.get('/postcodelookup/:postcode', postcodelookup);
 router.get('/servicedeliverystatuses', getServiceDeliveryStatuses);
+router.get('/subsectors/:sectorId', getSubsectors);
 
 
 module.exports = {
   postcodelookup,
   companySuggest,
-  companyDetail,
   countryLookup,
   accountManagerLookup,
   contactLookup,
@@ -229,3 +239,4 @@ module.exports = {
   teamLookup,
   router
 };
+
