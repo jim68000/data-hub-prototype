@@ -47,7 +47,7 @@ function loginToApi( req, res ){
       res.redirect('/');
     })
     .catch((error) => {
-    
+
       console.log('hello, computer');
 
       if (error.response.statusCode === 401) {
@@ -57,8 +57,6 @@ function loginToApi( req, res ){
 
       } else {
 
-        console.log( 'Error logging in' );
-        console.error( error );
         req.error = error.error;
         res.redirect('/error');
       }
