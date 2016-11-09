@@ -19,7 +19,6 @@ const contactController = require('./app/controller/contactcontroller');
 const interactionController = require('./app/controller/interactioncontroller');
 const searchController = require('./app/controller/searchcontroller');
 const apiController = require('./app/controller/apicontroller');
-const leadsController = require('./app/controller/leadscontroller');
 const loginController = require('./app/controller/logincontroller');
 
 const customValidators = require('./app/lib/validators');
@@ -139,13 +138,13 @@ app.use('/company', companyController.router);
 app.use('/contact', contactController.router);
 app.use('/interaction', interactionController.router);
 app.use('/search', searchController.router);
-app.use('/leads', leadsController.router);
 app.use('/api', apiController.router);
 
 app.get('/', function(req, res) {
   res.render('index');
 });
 
+metadata.setRedisClient( client );
 metadata.fetchAll( ( errors ) => {
 
   if( errors ){
