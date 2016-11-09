@@ -98,13 +98,6 @@ export class InteractionForm extends BaseForm {
       { value: 1, title: 'Event assistance' }
     ];
 
-    if( props.type ){
-
-      defaultInteraction.interaction_type = props.type;
-
-      // TODO: need to figure out how to do this with real data
-      state.isServiceDelivery = ( props.type.name.toLowerCase() === 'service delivery' );
-    }
 
     if (props.interaction) {
       state.formData = props.interaction;
@@ -124,6 +117,18 @@ export class InteractionForm extends BaseForm {
       state.showCompanyField = false;
     } else {
       state.formData = {};
+    }
+
+    if( props.type ){
+
+      defaultInteraction.interaction_type = props.type;
+
+      if( state.formData.interaction_type ){
+        state.formData.interaction_type = props.type;
+      }
+
+      // TODO: need to figure out how to do this with real data
+      state.isServiceDelivery = ( props.type.name.toLowerCase() === 'service delivery' );
     }
 
     this.setDefaults(state.formData, defaultInteraction);

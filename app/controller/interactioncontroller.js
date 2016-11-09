@@ -11,6 +11,7 @@ let metadata = require('../lib/metadata');
 const controllerUtils = require('../lib/controllerutils');
 
 function view(req, res) {
+
   let interaction_id = req.params.interaction_id;
 
   if (!interaction_id) {
@@ -20,7 +21,8 @@ function view(req, res) {
   interactionRepository.getInteraction(req.session.token, interaction_id)
     .then((interaction) => {
       res.render('interaction/interaction-details', {
-        interaction
+        interaction,
+        backUrl: `/company/company_company/${ interaction.company.id }#interactions`
       });
 
     })
@@ -31,17 +33,41 @@ function view(req, res) {
 }
 
 function edit(req, res) {
+
+  const queryTypeId = req.query.type;
   let interactionId = req.params.interaction_id || null;
 
   interactionRepository.getInteraction(req.session.token, interactionId)
     .then((interaction) => {
-      res.render('interaction/interaction-edit', {
-        changeTypeUrl: null, // TODO: create a URL that works here
-        type: null,
-        company: null,
-        contact: null,
-        interaction: ( interaction || null )
-      });
+
+      const companyId = interaction.company.id;
+      let typeId = interaction.interaction_type.id;
+      let type = interaction.interaction_type;
+
+      function render(){
+
+        res.render('interaction/interaction-edit', {
+          changeTypeUrl: createChooseTypeUrl( { companyId, typeId, interactionId } ), // TODO: create a URL that works here
+          type,
+          company: null,
+          contact: null,
+          interaction: ( interaction || null )
+        });
+      }
+
+      if( queryTypeId ){
+
+        metadata.getInteractionType( queryTypeId ).then( ( newType ) => {
+
+          type = newType;
+          typeId = queryTypeId;
+          render();
+        } );
+
+      } else {
+
+        render();
+      }
     });
 }
 
@@ -55,6 +81,7 @@ function createChooseTypeUrl( opts ){
   if( opts.typeId ){ params.push( `type_id=${ opts.typeId }` ); }
   if( opts.companyId ){ params.push( `company_id=${ opts.companyId }` ); }
   if( opts.contactId ){ params.push( `contact_id=${ opts.contactId }` ); }
+  if( opts.interactionId ){ params.push( `interaction_id=${ opts.interactionId }` ); }
 
   if( params.length ){
 
@@ -134,7 +161,7 @@ function post(req, res) {
   controllerUtils.flattenIdFields(interaction);
   controllerUtils.nullEmptyFields(interaction);
 
-  interactionRepository.saveInteraction(req.session.token, interaction)
+  interactionRepository.saveInteraction(req.session.token, interaction, req.body.interaction)
     .then((data) => {
       res.json(data);
     })
@@ -148,6 +175,14 @@ function chooseType( req, res ){
 
   metadata.getInteractionTypes().then( (types) => {
 
+    const interactionId = req.query.interaction_id;
+    let action = '/interaction/add';
+
+    if( interactionId ){
+
+      action = `/interaction/${ interactionId }/edit?type_id=${ req.query.type_id }`;
+    }
+
     types = types.map( ( type ) => {
       return {
         value: type.id,
@@ -156,7 +191,8 @@ function chooseType( req, res ){
     } );
 
     res.render( 'interaction/choose-type', {
-      action: '/interaction/add',
+      action,
+      backUrl: `/company/company_company/${ req.query.company_id }#interactions`,
       contact_id: req.query.contact_id,
       company_id: req.query.company_id,
       type_id: req.query.type_id,

@@ -47,17 +47,12 @@ function isServiceDelivery( interaction ){
 
 function createFakeServiceDelivery( interaction ){
 
-  const companyId = interaction.company;
+  const companyId = interaction.company.id;
   interaction.id = generateId();
   fakeServceDeliveryInteractions[ interaction.id ] = interaction;
 
   fakeCompanyServiceDeliveryInteractions[ companyId ] = ( fakeCompanyServiceDeliveryInteractions[ companyId ] || [] );
   fakeCompanyServiceDeliveryInteractions[ companyId ].push( interaction.id );
-
-  console.log( 'fake interactions:' );
-  console.dir( fakeServceDeliveryInteractions );
-  console.log( 'Company fake interactions' );
-  console.dir( fakeCompanyServiceDeliveryInteractions );
 }
 
 function updateFakeServiceDelivery( interaction ){
@@ -65,7 +60,16 @@ function updateFakeServiceDelivery( interaction ){
   fakeServceDeliveryInteractions[ interaction.id ] = interaction;
 }
 
-function handleFakeInteraction( interaction ){
+function handleFakeInteraction( interaction, rawInteraction ){
+
+  const fakeInteraction = Object.assign( {}, rawInteraction, {
+      archived: false,
+      archived_on: null,
+      archived_reason: null,
+      created_on: '2016-11-09T04:57:39.948000',
+      modified_on: '2016-11-09T04:57:39.948000',
+      archived_by: null
+    } );
 
   return new Promise( ( resolve, reject ) => {
 
@@ -77,33 +81,16 @@ function handleFakeInteraction( interaction ){
 
     } else {
 
-      if (interaction.id && interaction.id.length > 0) {
+      if (fakeInteraction.id && fakeInteraction.id.length > 0) {
 
-        updateFakeServiceDelivery( interaction );
+        updateFakeServiceDelivery( fakeInteraction );
 
       } else {
 
-        createFakeServiceDelivery( interaction );
+        createFakeServiceDelivery( fakeInteraction );
       }
 
-      resolve({
-        id: interaction.id,
-        archived: false,
-        archived_on: null,
-        archived_reason: null,
-        created_on: '2016-11-09T04:57:39.948000',
-        modified_on: '2016-11-09T04:57:39.948000',
-        subject: interaction.subject,
-        date_of_interaction: interaction.date_of_interaction,
-        notes: interaction.notes,
-        archived_by: null,
-        interaction_type: interaction.interaction_type,
-        dit_advisor: interaction.dit_advisor,
-        company: interaction.company,
-        contact: interaction.contact,
-        service: interaction.service,
-        dit_team: interaction.dit_team
-      });
+      resolve( fakeInteraction );
     }
   } );
 }
@@ -129,15 +116,13 @@ function getInteraction(token, interactionId) {
   }
 }
 
-function saveInteraction(token, interaction) {
+function saveInteraction(token, interaction, rawInteraction) {
 
   console.dir( interaction );
 
   if( isServiceDelivery( interaction ) ){
 
-    console.log( 'Save fake interaction' );
-
-    return handleFakeInteraction( interaction );
+    return handleFakeInteraction( interaction, rawInteraction );
 
   } else {
 
