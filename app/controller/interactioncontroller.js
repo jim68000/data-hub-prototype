@@ -20,11 +20,12 @@ function view(req, res) {
 
   interactionRepository.getInteraction(req.session.token, interaction_id)
     .then((interaction) => {
+
       res.render('interaction/interaction-details', {
+        isServiceDelivery: ( interaction.interaction_type.id === 'service-del-test' ),
         interaction,
         backUrl: `/company/company_company/${ interaction.company.id }#interactions`
       });
-
     })
     .catch((error) => {
       res.render('error', {error});
