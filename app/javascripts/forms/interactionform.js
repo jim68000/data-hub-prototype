@@ -48,7 +48,10 @@ const defaultInteraction = {
     name: ''
   },
   service_delivery_type: '',
-  service_delivery_status: '',
+  service_delivery_status: {
+    id: '',
+    name: ''
+  },
   primary_sector: {
     id: '',
     name: ''
@@ -218,6 +221,8 @@ export class InteractionForm extends BaseForm {
           label={ LABELS.service_delivery_status }
           name='service_delivery_status'
           onChange={ this.updateField }
+          errors={ this.getErrors( 'service_delivery_status' ) }
+          value={ formData.service_delivery_status.id }
           />}
 
         <InputText
@@ -274,7 +279,7 @@ export class InteractionForm extends BaseForm {
 
         { this.state.isServiceDelivery && <Autosuggest
           label={LABELS.service_delivery_dit_team}
-          lookupUrl='/api/teamlookup'
+          lookupUrl='/api/team'
           onChange={this.updateField}
           errors={this.getErrors('dit_team')}
           name="dit_team"

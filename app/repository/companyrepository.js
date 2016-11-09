@@ -9,6 +9,7 @@ const metadata = require('../lib/metadata');
 // Get a company and then go back and get further detail for each company contact
 // and interaction, so the company detail page can give the detail required.
 function getDitCompany(token, id) {
+
   let result;
 
   return authorisedRequest(token, {
@@ -17,6 +18,12 @@ function getDitCompany(token, id) {
   })
   .then((company) => {
     result = company;
+    const fakeInteractions = interactionRepository.getFakeCompanyInteractions( id );
+
+    if( fakeInteractions.length ){
+
+      result.interactions = result.interactions.concat( fakeInteractions );
+    }
 
     let promises = [];
     for (const interaction of result.interactions) {

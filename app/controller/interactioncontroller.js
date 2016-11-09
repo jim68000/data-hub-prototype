@@ -36,6 +36,8 @@ function edit(req, res) {
   interactionRepository.getInteraction(req.session.token, interactionId)
     .then((interaction) => {
       res.render('interaction/interaction-edit', {
+        changeTypeUrl: null, // TODO: create a URL that works here
+        type: null,
         company: null,
         contact: null,
         interaction: ( interaction || null )

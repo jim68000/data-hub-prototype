@@ -91,12 +91,12 @@ module.exports.getServiceDeliveryStatuses = function(){
   return new Promise( ( resolve/* , reject */ ) => {
 
     resolve([
-      { id: 0, name: 'Completed' },
-      { id: 1, name: 'Current' },
-      { id: 2, name: 'Offered' },
-      { id: 3, name: 'On hold' },
-      { id: 4, name: 'UKEF - In discussion - Application likely' },
-      { id: 5, name: 'Withdrawn' }
+      { id: '0', name: 'Completed' },
+      { id: '1', name: 'Current' },
+      { id: '2', name: 'Offered' },
+      { id: '3', name: 'On hold' },
+      { id: '4', name: 'UKEF - In discussion - Application likely' },
+      { id: '5', name: 'Withdrawn' }
     ]);
   } );
 };

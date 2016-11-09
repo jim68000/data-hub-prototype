@@ -267,6 +267,7 @@ router.get('/primarysector', createIndexofFilter( 'PRIMARY_SECTORS', 'name' ) );
 router.get('/subsectors/:sectorId', getSubsectors);
 router.get('/country', createIndexofFilter( 'COUNTRYS', 'name' ) );
 router.get('/ukregion', createIndexofFilter( 'REGION_OPTIONS', 'name' ) );
+router.get('/team', createIndexofFilter( 'TEAMS', 'name' ) );
 
 
 module.exports = {

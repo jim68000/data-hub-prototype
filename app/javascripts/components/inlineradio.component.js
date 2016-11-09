@@ -6,16 +6,6 @@ export class InlineRadioComponent extends Component {
     super( props );
 
     this.state = { value: props.value };
-
-    let groupClass = 'form-group';
-    let error;
-
-    if (props.errors && props.errors.length > 0) {
-      error = props.errors[0];
-      groupClass += ' error';
-    }
-
-    this.groupClass = groupClass;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -33,6 +23,15 @@ export class InlineRadioComponent extends Component {
 
     let state = this.state;
     let props = this.props;
+
+    let groupClass = 'form-group';
+    let error;
+
+    if (props.errors && props.errors.length > 0) {
+      error = props.errors[0];
+      groupClass += ' error';
+    }
+
     let inputs = props.options.map( ( option, index ) => {
 
       let id = `${ props.name }-${ option.value }-id`;
@@ -48,8 +47,11 @@ export class InlineRadioComponent extends Component {
       </label> );
     } );
 
-    return ( <fieldset className={ this.groupClass + ' inline form-group__checkbox-group' } id={ props.name + '-wrapper' }>
+    return ( <fieldset className={ groupClass + ' inline form-group__checkbox-group' } id={ props.name + '-wrapper' }>
       <legend className="form-label">{ props.label }</legend>
+        {error &&
+          <span className="error-message">{error}</span>
+        }
         { inputs }
     </fieldset> );
   }
