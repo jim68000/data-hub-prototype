@@ -60,16 +60,48 @@ function updateFakeServiceDelivery( interaction ){
   fakeServceDeliveryInteractions[ interaction.id ] = interaction;
 }
 
-function handleFakeInteraction( interaction, rawInteraction ){
+function createName( contact ){
+
+  if( contact && contact.name && !contact.first_name ){
+
+    const firstSpace = contact.name.indexOf( ' ' );
+
+    if( firstSpace >= 0 ){
+
+      contact.first_name = contact.name.substr( 0, firstSpace );
+      contact.last_name = contact.name.substr( firstSpace + 1 );
+
+    } else {
+
+      contact.first_name = contact.name;
+    }
+  }
+}
+
+function createFakeInteraction( rawInteraction ){
 
   const fakeInteraction = Object.assign( {}, rawInteraction, {
-      archived: false,
-      archived_on: null,
-      archived_reason: null,
-      created_on: '2016-11-09T04:57:39.948000',
-      modified_on: '2016-11-09T04:57:39.948000',
-      archived_by: null
-    } );
+    archived: false,
+    archived_on: null,
+    archived_reason: null,
+    created_on: '2016-11-09T04:57:39.948000',
+    modified_on: '2016-11-09T04:57:39.948000',
+    archived_by: null
+  } );
+
+  createName( fakeInteraction.contact );
+  createName( fakeInteraction.dit_advisor );
+
+  if( fakeInteraction.dit_advisor && !fakeInteraction.advisor ){
+    fakeInteraction.advisor = fakeInteraction.dit_advisor.name;
+  }
+
+  return fakeInteraction;
+}
+
+function handleFakeInteraction( interaction, rawInteraction ){
+
+  const fakeInteraction = createFakeInteraction( rawInteraction );
 
   return new Promise( ( resolve, reject ) => {
 
@@ -117,8 +149,6 @@ function getInteraction(token, interactionId) {
 }
 
 function saveInteraction(token, interaction, rawInteraction) {
-
-  console.dir( interaction );
 
   if( isServiceDelivery( interaction ) ){
 
