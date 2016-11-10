@@ -54,10 +54,10 @@
       <td>{{ interaction.uk_region.name }}</td>
     </tr>
     <tr>
-      <th>Primay sector</th>
+      <th>Primary sector</th>
       <td>{{ interaction.primary_sector.name }}</td>
     </tr>
-    {% if interaction.subsector %}
+    {% if interaction.subsector and interaction.subsector.name %}
     <tr>
       <th>Subsector</th>
       <td>{{ interaction.subsector.name }}</td>
