@@ -19,7 +19,7 @@ const requiredFields = [
 ];
 
 function generateId(){
-  return Math.floor( Math.random() * Date.now() );
+  return '' + Math.floor( Math.random() * Date.now() );
 }
 
 function validate( interaction ){
