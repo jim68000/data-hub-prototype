@@ -21,6 +21,21 @@
       <th width="30%">Interaction type</th>
       <td>{{ interaction.interaction_type.name }}</td>
     </tr>
+
+    {% if interaction.service_delivery_type and interaction.service_delivery_type.name %}
+    <tr>
+      <th>Service delivery type</th>
+      <td>{{ interaction.service_delivery_type.name }}</td>
+    </tr>
+    {% endif %}
+
+    {% if interaction.service_delivery_status and interaction.service_delivery_status.name %}
+    <tr>
+      <th>Status</th>
+      <td>{{ interaction.service_delivery_status.name }}</td>
+    </tr>
+    {% endif %}
+
     <tr>
     <tr>
       <th>Subject</th>
