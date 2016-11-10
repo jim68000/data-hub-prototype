@@ -47,7 +47,10 @@ const defaultInteraction = {
     id: '',
     name: ''
   },
-  service_delivery_type: '',
+  service_delivery_type: {
+    id: null,
+    name: '',
+  },
   service_delivery_status: {
     id: '',
     name: ''
@@ -94,8 +97,8 @@ export class InteractionForm extends BaseForm {
 
     this.changeTypeUrl = props.changeType;
     this.serviceDeliveryTypes = [
-      { value: 0, title: 'Significant assistance' },
-      { value: 1, title: 'Event assistance' }
+      { id: 0, name: 'Significant assistance' },
+      { id: 1, name: 'Event assistance' }
     ];
 
 

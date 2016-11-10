@@ -4,20 +4,13 @@ export class InlineRadioComponent extends Component {
 
   constructor( props ){
     super( props );
-
     this.state = { value: props.value };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps && nextProps.value) {
-      this.setState({value: nextProps.value});
-    }
-  }
-
-  onChange = ( event ) => {
-    this.setState({value: event.target.value});
-    this.props.onChange( event );
-  }
+  onChange = ( update ) => {
+    this.setState({value: update.value});
+    this.props.onChange(update);
+  };
 
   render() {
 
@@ -34,18 +27,26 @@ export class InlineRadioComponent extends Component {
 
     let inputs = props.options.map( ( option, index ) => {
 
-      let id = `${ props.name }-${ option.value }-id`;
+      const id = `${ props.name }-${ option.id }-id`;
+      const checked = (option.id === state.value.id);
+      const className = checked ? 'block-label selected' : 'block-label'
 
-      return ( <label key={ index } className="block-label" htmlFor={ id }>
+      return ( <label key={ index } className={className} htmlFor={ id }>
         <input id={ id }
                type="radio"
                name={ props.name }
-               value={ option.value }
-               onChange={ this.onChange }
-               checked={ option.value == state.value }/>
-        { option.title }
-      </label> );
-    } );
+               value={ option.id }
+               onChange={ () => {
+                 this.onChange({
+                   name: props.name,
+                   value: option
+                 });
+               }}
+               checked={checked}/>
+        { option.name }
+      </label>
+      );
+    });
 
     return ( <fieldset className={ groupClass + ' inline form-group__checkbox-group' } id={ props.name + '-wrapper' }>
       <legend className="form-label">{ props.label }</legend>
