@@ -2,8 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import {BaseForm} from './baseform';
 import {AutosuggestComponent as Autosuggest} from '../components/autosuggest.component';
-import {RadioWithIdComponent as RadioWithId} from '../components/radiowithid.component';
 import {InlineRadioComponent as InlineRadio} from '../components/inlineradio.component';
+import {SelectWithIdComponent as SelectWithId} from '../components/selectwithid.component';
 import {DateInputComponent as DateInput} from '../components/dateinput.component';
 
 import {inputTextComponent as InputText} from '../components/inputtext.component';
@@ -224,7 +224,7 @@ export class InteractionForm extends BaseForm {
           value={ formData.service_delivery_type }
           label={ LABELS.service_delivery_type }/>}
 
-        { this.state.isServiceDelivery && <RadioWithId
+        { this.state.isServiceDelivery && <SelectWithId
           url='/api/servicedeliverystatuses'
           label={ LABELS.service_delivery_status }
           name='service_delivery_status'

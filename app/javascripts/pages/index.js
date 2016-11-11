@@ -3,11 +3,10 @@
 import 'babel-polyfill';
 import SearchBar from '../controls/searchbar';
 import FlashMessage from '../controls/flash-message';
+import ClippedList from '../controls/clipped-list';
 
 new SearchBar(document.querySelector('.searchbar'));
+new ClippedList( document.getElementById( 'interactions-list' ), 'See all new interactions', 'See less interactions' );
+new ClippedList( document.getElementById( 'contacts-list' ), 'See all new contacts', 'See less contacts' );
 
-const flashes = document.querySelectorAll('.flash-message' );
-
-for (let pos = flashes.length; pos; pos -= 1) {
-  new FlashMessage( flashes[pos] );
-}
+FlashMessage.activateAll();

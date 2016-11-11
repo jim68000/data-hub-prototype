@@ -5,11 +5,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {CompanyForm} from '../forms/companyform';
 import ContactTable from '../components/contacttable.component';
-import CompanyInteractionTable from '../components/companyinteractiontable.component';
-import { addClass, removeClass } from '../utils/classtuff';
+import {InteractionTableComponent as InteractionTable} from '../components/interactiontable.component';
+import { addClass, removeClass } from '../utils/elementstuff';
 import Edit from '../controls/edit';
 import SearchBar from '../controls/searchbar';
 import Tabs from '../controls/tabs';
+
+new Edit(document.querySelector('.js-hidden-edit'));
+new SearchBar(document.querySelector('.searchbar'));
+new Tabs(document.querySelector('.js-tabs'));
 
 const archiveForm = document.getElementById('archive-details');
 const archiveButton = document.getElementById('archive-reveal-button');
@@ -48,7 +52,7 @@ if (contacts && contacts.length > 0) {
 
 if (interactions && interactions.length > 0) {
   ReactDOM.render(
-    <CompanyInteractionTable interactions={interactions} company={company}/>,
+    <InteractionTable interactions={interactions}/>,
     document.querySelector('#interaction-table-wrapper')
   );
 }
@@ -84,10 +88,5 @@ if (archiveButton) {
   archiveForm.addEventListener('submit', submitArchiveForm);
 }
 
-
-
-new Edit(document.querySelector('.js-hidden-edit'));
-new SearchBar(document.querySelector('.searchbar'));
-new Tabs(document.querySelector('.js-tabs'));
 
 ReactDOM.render(<CompanyForm company={company}/>, document.getElementById('company-edit'));

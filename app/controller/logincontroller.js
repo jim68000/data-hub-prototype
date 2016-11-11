@@ -48,8 +48,6 @@ function loginToApi( req, res ){
     })
     .catch((error) => {
 
-      console.log('hello, computer');
-
       if (error.response.statusCode === 401) {
 
         req.flash('error-message', 'Invalid user id or password');
@@ -57,8 +55,7 @@ function loginToApi( req, res ){
 
       } else {
 
-        req.error = error.error;
-        res.redirect('/error');
+        res.render( 'error', { error } );
       }
     });
 }
@@ -66,6 +63,7 @@ function loginToApi( req, res ){
 function logout( req, res ){
 
   req.session.token = null;
+  req.session.user = null;
   req.flash( 'success-message', 'Signed out' );
   res.redirect( '/login' );
 }
