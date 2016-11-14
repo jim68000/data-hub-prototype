@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000;
 module.exports = {
   env: process.env.NODE_ENV,
   port: port,
-  apiRoot: process.env.API_ROOT || 'http://localhost:8000',
+  apiRoot: process.env.API_ROOT || 'http://leeloo:8000',
   api: {
     authUrl: '/token/',
     clientId: process.env.API_CLIENT_ID,
@@ -18,7 +18,7 @@ module.exports = {
   redis: {
     url: process.env.REDIS_URL || process.env.REDISTOGO_URL,
     port: process.env.REDIS_PORT || 6379,
-    host: process.env.REDIS_HOST || '127.0.0.1',
+    host: process.env.REDIS_HOST || 'redis-rhod',
     metadataTtl: ( process.env.METADATA_TTL || ( 15 * 60 ) )
   },
   session: {
